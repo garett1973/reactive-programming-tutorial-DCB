@@ -1,5 +1,6 @@
 package net.virgis.tutorials.reactiveprogramming.services;
 
+import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.Test;
 import reactor.test.StepVerifier;
 
@@ -171,6 +172,126 @@ class FluxAndMonoServicesTest {
 
         StepVerifier.create(fruitsFluxTransformSwitchIfEmpty)
                 .expectNext("Bananarama")
+                .verifyComplete();
+    }
+
+    @Test
+    void fruitsFluxConcat() {
+        var fruitsFluxConcat = fluxAndMonoServices.fruitsFluxConcat();
+
+        StepVerifier.create(fruitsFluxConcat)
+                .expectNext("Apple")
+                .expectNext("Banana")
+                .expectNext("Orange")
+                .expectNext("Pear")
+                .expectNext("Carrot", "Potato", "Broccoli", "Cauliflower")
+                .verifyComplete();
+    }
+
+    @Test
+    void fruitsFluxConcatWith() {
+        var fruitsFluxConcatWith = fluxAndMonoServices.fruitsFluxConcatWith();
+
+        StepVerifier.create(fruitsFluxConcatWith)
+                .expectNext("Apple")
+                .expectNext("Banana")
+                .expectNext("Orange")
+                .expectNext("Pear")
+                .expectNext("Carrot", "Potato", "Broccoli", "Cauliflower")
+                .verifyComplete();
+    }
+
+    @Test
+    void fruitsMonoConcatWith() {
+        var fruitsMonoConcatWith = fluxAndMonoServices.fruitsMonoConcatWith();
+
+        StepVerifier.create(fruitsMonoConcatWith)
+                .expectNext("Apple")
+                .expectNext("Carrot")
+                .verifyComplete();
+    }
+
+    @Test
+    void fruitsFluxMerge() {
+        var fruitsFluxMerge = fluxAndMonoServices.fruitsFluxMerge();
+
+        StepVerifier.create(fruitsFluxMerge)
+                .expectNext("Apple")
+                .expectNext("Carrot")
+                .expectNext("Banana")
+                .expectNext("Potato")
+                .expectNext("Orange")
+                .expectNext("Broccoli")
+                .verifyComplete();
+    }
+
+    @Test
+    void fruitsFluxMergeWith() {
+        var fruitsFluxMergeWith = fluxAndMonoServices.fruitsFluxMergeWith();
+
+        StepVerifier.create(fruitsFluxMergeWith)
+                .expectNext("Apple")
+                .expectNext("Carrot")
+                .expectNext("Banana")
+                .expectNext("Potato")
+                .expectNext("Orange")
+                .expectNext("Broccoli")
+                .verifyComplete();
+    }
+
+    @Test
+    void fruitsFluxMergeWithSequential() {
+        var fruitsFluxMergeWithSequential = fluxAndMonoServices.fruitsFluxMergeWithSequential();
+
+        StepVerifier.create(fruitsFluxMergeWithSequential)
+                .expectNext("Apple")
+                .expectNext("Banana")
+                .expectNext("Orange")
+                .expectNext("Carrot")
+                .expectNext("Potato")
+                .expectNext("Broccoli")
+                .verifyComplete();
+    }
+
+    @Test
+    void fruitsFluxZip() {
+        var fruitsFluxZip = fluxAndMonoServices.fruitsFluxZip();
+
+        StepVerifier.create(fruitsFluxZip)
+                .expectNext("Apple - Carrot")
+                .expectNext("Banana - Potato")
+                .expectNext("Orange - Broccoli")
+                .verifyComplete();
+    }
+
+    @Test
+    void fruitsFluxZipWith() {
+        var fruitsFluxZipWith = fluxAndMonoServices.fruitsFluxZipWith();
+
+        StepVerifier.create(fruitsFluxZipWith)
+                .expectNext("Apple - Carrot")
+                .expectNext("Banana - Potato")
+                .expectNext("Orange - Broccoli")
+                .verifyComplete();
+    }
+
+    @Test
+    void fruitsFluxZipTuple() {
+        var fruitsFluxZipTuple = fluxAndMonoServices.fruitsFluxZipTuple();
+
+        StepVerifier.create(fruitsFluxZipTuple)
+                .expectNext("Apple - Carrot - Celery")
+                .expectNext( "Banana - Potato - Lettuce")
+                .expectNext("Orange - Broccoli - Radish")
+                .verifyComplete();
+    }
+
+    @Test
+    void fruitsMonoZipWith() {
+        var fruitsMonoZipWith = fluxAndMonoServices.fruitsMonoZipWith();
+
+        StepVerifier.create(fruitsMonoZipWith)
+                .expectNext("Apple - Carrot")
                 .verifyComplete();
     }
 }
