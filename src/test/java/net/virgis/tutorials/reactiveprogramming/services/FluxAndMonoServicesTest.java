@@ -145,4 +145,32 @@ class FluxAndMonoServicesTest {
                 .expectNext("o")
                 .verifyComplete();
     }
+
+    @Test
+    void fruitsFluxTransform() {
+        var fruitsFluxTransform = fluxAndMonoServices.fruitsFluxTransform(5);
+
+        StepVerifier.create(fruitsFluxTransform)
+                .expectNext("Banana")
+                .expectNext("Orange")
+                .verifyComplete();
+    }
+
+    @Test
+    void fruitsFluxTransformDefaultIfEmpty() {
+        var fruitsFluxTransformDefaultIfEmpty = fluxAndMonoServices.fruitsFluxTransformDefaultIfEmpty(10);
+
+        StepVerifier.create(fruitsFluxTransformDefaultIfEmpty)
+                .expectNext("Default")
+                .verifyComplete();
+    }
+
+    @Test
+    void fruitsFluxTransformSwitchIfEmpty() {
+        var fruitsFluxTransformSwitchIfEmpty = fluxAndMonoServices.fruitsFluxTransformSwitchIfEmpty(10);
+
+        StepVerifier.create(fruitsFluxTransformSwitchIfEmpty)
+                .expectNext("Bananarama")
+                .verifyComplete();
+    }
 }
