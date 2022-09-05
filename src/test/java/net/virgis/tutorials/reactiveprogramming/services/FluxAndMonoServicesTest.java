@@ -294,4 +294,63 @@ class FluxAndMonoServicesTest {
                 .expectNext("Apple - Carrot")
                 .verifyComplete();
     }
+
+    @Test
+    void fruitsFluxFilterDoOn() {
+        var fruitsFluxFilterDoOn = fluxAndMonoServices.fruitsFluxFilterDoOn(4);
+
+        StepVerifier.create(fruitsFluxFilterDoOn)
+                .expectNext("Apple")
+                .expectNext("Banana")
+                .expectNext("Orange")
+                .verifyComplete();
+    }
+
+    @Test
+    void fruitsFluxOnErrorReturn() {
+        var fruitsFluxOnErrorReturn = fluxAndMonoServices.fruitsFluxOnErrorReturn(5);
+
+        StepVerifier.create(fruitsFluxOnErrorReturn)
+                .expectNext("Apple")
+                .expectNext("Default fruit")
+                .verifyComplete();
+    }
+
+    @Test
+    void fruitsFluxOnErrorReturnWith() {
+        var fruitsFluxOnErrorReturnWith = fluxAndMonoServices.fruitsFluxOnErrorReturnWith(5);
+
+        StepVerifier.create(fruitsFluxOnErrorReturnWith)
+                .expectNext("Apple", "Banana", "Orange", "Pear", "Default fruit")
+                .verifyComplete();
+    }
+
+    @Test
+    void fruitsFluxOnErrorContinue() {
+        var fruitsFluxOnErrorContinue = fluxAndMonoServices.fruitsFluxOnErrorContinue(5);
+
+        StepVerifier.create(fruitsFluxOnErrorContinue)
+                .expectNext("Apple", "Pear")
+                .verifyComplete();
+    }
+
+    @Test
+    void fruitsFluxOnErrorMap() {
+        var fruitsFluxOnErrorMap = fluxAndMonoServices.fruitsFluxOnErrorMap(5);
+
+        StepVerifier.create(fruitsFluxOnErrorMap)
+                .expectNext("Apple")
+                .expectError(IllegalStateException.class)
+                .verify();
+    }
+
+    @Test
+    void fruitsFluxOnError() {
+        var fruitsFluxOnError = fluxAndMonoServices.fruitsFluxOnError(5);
+
+        StepVerifier.create(fruitsFluxOnError)
+                .expectNext("Apple")
+                .expectError(RuntimeException.class)
+                .verify();
+    }
 }

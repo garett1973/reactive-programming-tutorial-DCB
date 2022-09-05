@@ -171,6 +171,24 @@ public class FluxAndMonoServices {
                 .log();
     }
 
+    public Flux<String> fruitsFluxFilterDoOn(int number) {
+        return Flux.fromIterable(List.of("Apple", "Banana", "Orange", "Pear"))
+                .filter(s -> s.length() > number)
+                .doOnNext(s -> {
+                    System.out.println("Filtered value: " + s);
+                })
+                .doOnSubscribe(subscription -> {
+                    System.out.println("Subscribed to Flux: " + subscription.toString());
+                })
+                .doOnComplete(() -> {
+                    System.out.println("Completed Flux");
+                })
+                .doFinally(signalType -> {
+                    System.out.println("Signal type: " + signalType);
+                })
+                .log();
+    }
+
     public Mono<String> fruitsMonoZipWith() {
         var fruits = Mono.just("Apple");
         var vegetables = Mono.just("Carrot");
@@ -186,6 +204,71 @@ public class FluxAndMonoServices {
     public Mono<List<String>> fruitMonoFlatMap() {
         return Mono.just("Mango")
                 .flatMap(s -> Mono.just(List.of(s.split(""))))
+                .log();
+    }
+
+    public Flux<String> fruitsFluxOnErrorReturn(int number) {
+        return Flux.fromIterable(List.of("Apple", "BananaMangoPear", "OrangeBanana", "Pear"))
+                .map(s -> {
+                    if (s.length() > number) {
+                        throw new RuntimeException("Fruit name too long");
+                    }
+                    return s;
+                })
+                .onErrorReturn("Default fruit")
+                .log();
+    }
+
+    public Flux<String> fruitsFluxOnErrorReturnWith(int number) {
+        return Flux.just("Apple", "Banana", "Orange", "Pear")
+                .concatWith(Flux.error(
+                        new RuntimeException("Error occurred")
+                ))
+                .onErrorReturn("Default fruit")
+                .log();
+    }
+
+    public Flux<String> fruitsFluxOnErrorContinue(int number) {
+        return Flux.fromIterable(List.of("Apple", "BananaMangoPear", "OrangeBanana", "Pear"))
+                .map(s -> {
+                    if (s.length() > number) {
+                        throw new RuntimeException("Fruit name too long");
+                    }
+                    return s;
+                })
+                .onErrorContinue((throwable, o) -> {
+                    System.out.println("Error occurred (throwable): " + throwable);
+                    System.out.println("Error object (object): " + o);
+                })
+                .log();
+    }
+
+    public Flux<String> fruitsFluxOnErrorMap(int number) {
+        return Flux.fromIterable(List.of("Apple", "BananaMangoPear", "OrangeBanana", "Pear"))
+                .map(s -> {
+                    if (s.length() > number) {
+                        throw new RuntimeException("Fruit name too long");
+                    }
+                    return s;
+                })
+                .onErrorMap(throwable -> {
+                    System.out.println("Error occurred (throwable): " + throwable);
+                    return new IllegalStateException("From onErrorMap (throwable): " + throwable);
+                })
+                .log();
+    }
+
+    public Flux<String> fruitsFluxOnError(int number) {
+        return Flux.fromIterable(List.of("Apple", "BananaMangoPear", "OrangeBanana", "Pear"))
+                .map(s -> {
+                    if (s.length() > number) {
+                        throw new RuntimeException("Fruit name too long");
+                    }
+                    return s;
+                })
+                .doOnError(throwable -> {
+                    System.out.println("Error occurred (throwable): " + throwable);
+                })
                 .log();
     }
 
